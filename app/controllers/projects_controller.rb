@@ -14,14 +14,11 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   def show
     @project = Project.find(params[:id])
-    logger.debug "Project user: #{@project.user}"
   end
 
   # GET /projects/new
   def new
     @project = Project.new
-    @project.user = current_user
-    @project.save
   end
 
   # GET /projects/1/edit
@@ -32,6 +29,7 @@ class ProjectsController < ApplicationController
   # POST /projects
   def create
     @project = Project.new(params[:project])
+    @project.creator = current_user
 
     if @project.save
       redirect_to @project, notice: 'Project was successfully created.'
@@ -44,7 +42,7 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])
 
-    if @project.user != current_user
+    if @project.creator != current_user
       redirect_to @project, notice: 'This project is not yours to edit.'
     elsif @project.update_attributes(params[:project])
       redirect_to @project, notice: 'Project was successfully updated.'
@@ -56,8 +54,13 @@ class ProjectsController < ApplicationController
   # DELETE /projects/1
   def destroy
     @project = Project.find(params[:id])
-    @project.destroy
-    
-    redirect_to projects_url
+
+    # if @project.creator != current_user
+    #   flash[:notice] = 'That project is not yours to delete'
+    #   redirect_to :back
+    # else
+      @project.destroy
+      redirect_to projects_url
+    # end
   end
 end

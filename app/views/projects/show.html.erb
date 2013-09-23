@@ -8,8 +8,8 @@
   <dd><%= @project.title %></dd>
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
   <dd><%= @project.description %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
-  <dd><%= @project.user.email %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:creator_id) %>:</strong></dt>
+  <dd><%= @project.creator.email %></dd>
 </dl>
 
 <div class="form-actions">
