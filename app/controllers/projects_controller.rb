@@ -3,7 +3,6 @@ class ProjectsController < ApplicationController
   before_filter :authenticate_user!, :except => [:index, :show]
 
   # GET /projects
-  # GET /projects.json
   def index
     @projects = Project.all
 
@@ -13,16 +12,16 @@ class ProjectsController < ApplicationController
   end
 
   # GET /projects/1
-  # GET /projects/1.json
   def show
     @project = Project.find(params[:id])
+    logger.debug "Project user: #{@project.user}"
   end
 
   # GET /projects/new
-  # GET /projects/new.json
   def new
     @project = Project.new
     @project.user = current_user
+    @project.save
   end
 
   # GET /projects/1/edit
@@ -31,7 +30,6 @@ class ProjectsController < ApplicationController
   end
 
   # POST /projects
-  # POST /projects.json
   def create
     @project = Project.new(params[:project])
 
@@ -43,7 +41,6 @@ class ProjectsController < ApplicationController
   end
 
   # PUT /projects/1
-  # PUT /projects/1.json
   def update
     @project = Project.find(params[:id])
 
@@ -57,7 +54,6 @@ class ProjectsController < ApplicationController
   end
 
   # DELETE /projects/1
-  # DELETE /projects/1.json
   def destroy
     @project = Project.find(params[:id])
     @project.destroy
