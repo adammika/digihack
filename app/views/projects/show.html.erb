@@ -1,20 +1,32 @@
 <%- model_class = Project -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+  <h1><%= @project.title %></h1>
 </div>
 
 <dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:title) %>:</strong></dt>
-  <dd><%= @project.title %></dd>
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
   <dd><%= @project.description %></dd>
   <dt><strong><%= model_class.human_attribute_name(:creator_id) %>:</strong></dt>
   <dd><%= @project.creator.email %></dd>
 </dl>
 
+<div>
+  <h3>Members</h3>
+  <ul>
+    <% if @project.users.count > 0 %>
+      <% @project.users do |user| %>
+        <li><%= user.email %></li>
+      <% end %>
+    <% else %>
+      <li>No members yet!</li>
+    <% end %>
+  </ul>
+</div>
+
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
-              projects_path, :class => 'btn'  %>
+              projects_path,
+              :class => 'btn btn-success'  %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_project_path(@project), :class => 'btn' %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
