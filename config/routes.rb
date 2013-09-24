@@ -1,8 +1,12 @@
 Digihack::Application.routes.draw do
-  devise_for :users
+  get "memberships/create"
 
+  devise_for :users
   resources :projects
 
+  resources :projects do
+    resources :memberships, only: [:create, :destroy]
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
