@@ -17,7 +17,7 @@
 
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
-  <dd><%= @project.description %></dd>
+  <dd><%= simple_format(@project.description) %></dd>
 </dl>
 
 <div class="form-actions">
@@ -49,4 +49,29 @@
       <li>No members yet!</li>
     <% end %>
   </ul>
+</div>
+
+<div>
+  <h3>Comments</h3>
+  <table class="table table-striped">
+    <tbody>
+      <% if @project.comments.count > 0 %>
+        <% @project.comments.each do |comment| %>
+          <tr>
+          <td width="30%"><strong><%= comment.commenter %></strong></td>
+          <td width="70%"><%=  simple_format(comment.body) %></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr><td width="100%">No Comments Yet!</td></tr>
+      <% end %>
+    </tbody>
+  </table>
+  <br />
+  <% if current_user %>
+    <%= form_for([@project, @project.comments.build]) do |f| %>
+      <%= f.text_area :body %>
+      <%= f.submit :class => 'btn' %> 
+    <% end %>
+  <% end %>
 </div>
