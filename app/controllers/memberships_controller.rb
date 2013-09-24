@@ -1,5 +1,7 @@
 class MembershipsController < ApplicationController
   def create
+    logger.debug "Params: #{params}"
+    logger.debug "Current user: #{current_user}"
     @project = Project.find(params[:project_id])
     @membership = @project.memberships.create(user_id: current_user.id)
     @membership.save

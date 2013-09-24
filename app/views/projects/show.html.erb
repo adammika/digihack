@@ -1,52 +1,52 @@
 <%- model_class = Project -%>
 <div class="page-header">
   <h1><%= @project.title %></h1>
+  <p><strong>Created by:</strong> <%= @project.creator.name %></p>
+  <% if @project.creator == current_user %>
+    <p>
+      <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                  edit_project_path(@project), :class => 'btn' %>
+      <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                  project_path(@project),
+                  :method => 'delete',
+                  :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                  :class => 'btn btn-danger' %>
+    </p>
+  <% end %>
 </div>
 
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
   <dd><%= @project.description %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:creator_id) %>:</strong></dt>
-  <dd><%= @project.creator.email %></dd>
 </dl>
 
-<div>
-  <h3>Members</h3>
+<div class="form-actions">
+  <h3>
+    <span>Project Members</span>
+    <span>
+      <% if current_user %>
+        <% if @project.members.include?(current_user) %>
+          <%= link_to 'Remove Self From Project',
+                      project_membership_path(@project.id, current_user.id),
+                      :method => 'delete',
+                      :data => { :confirm => 'Are you sure?' },
+                      :class => 'btn btn-danger pull-right' %>
+        <% else %>
+          <%= link_to 'Become a member of this project',
+                      project_memberships_path(@project),
+                      :method => :post,
+                      :class => 'btn btn-success pull-right' %>      
+        <% end %>
+      <% end %>      
+    </span>  
+  </h3>
   <ul>
     <% if @project.members.count > 0 %>
       <% @project.members.each do |user| %>
-        <li>
-          <%= user.email %>
-          <% if @project.members.includes(current_user) %>
-            <%= link_to 'Remove from project',
-                        project_membership_path(@project.id, current_user.id),
-                        :method => 'delete',
-                        :data => { :confirm => 'Are you sure?' },
-                        :class => 'btn btn-danger' %>
-          <% end %>
-        </li>
+        <li><%= user.name %></li>
       <% end %>
     <% else %>
       <li>No members yet!</li>
     <% end %>
   </ul>
-</div>
-
-<div class="form-actions">
-  <% if @project.members.include?(current_user) %>
-    <%= link_to 'Become a member of this project',
-                project_memberships_path(@project),
-                :method => :post,
-                :class => 'btn btn-success' %>
-  <% end %>
-
-  <% if @project.creator == current_user %>
-    <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                edit_project_path(@project), :class => 'btn' %>
-    <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                project_path(@project),
-                :method => 'delete',
-                :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                :class => 'btn btn-danger' %>
-  <% end %>
 </div>
